@@ -67,9 +67,24 @@ public class UserTest {
     }
 
     @Test
-    public void testListUsers() {
-        List<User> user = (List<User>) userRepository.findAll();
+    @Rollback(false)
+    public void testDeleteUser() {
+        Integer id = 1;
 
-        assertThat(user).size().isGreaterThan(0);
+        boolean existBeforeDelete = userRepository.existsById(id);
+
+        userRepository.deleteById(id);
+
+        boolean existAfterDelete = userRepository.existsById(id);
+
+        Assert.isTrue(existBeforeDelete);
+        Assert.isTrue(!existAfterDelete);
+    }
+
+    @Test
+    public void testListUsers() {
+        List<User> users = (List<User>) userRepository.findAll();
+
+        assertThat(users).size().isGreaterThan(0);
     }
 }
